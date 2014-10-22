@@ -1,21 +1,22 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Managers\MapManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Models\Virus\Virus.cs">
     <Files>
       <File FileName="Assets\Scripts\Managers\FusionManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Models\Virus\Virus.cs" Line="233" Column="6" />
-      <File FileName="Assets\Scripts\Managers\VirusesManager.cs" Line="110" Column="5" />
+      <File FileName="Assets\Scripts\Models\Virus\Virus.cs" Line="161" Column="8" />
+      <File FileName="Assets\Scripts\Managers\VirusesManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Managers\DuplicateManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Managers\MapManager.cs" Line="66" Column="71" />
-      <File FileName="Assets\Scripts\EditorDebug.cs" Line="66" Column="128" />
-      <File FileName="Assets\Scripts\Managers\ControlsManager.cs" Line="34" Column="66" />
-      <File FileName="Assets\Scripts\Models\Antibodies\NormalAntibody.cs" Line="40" Column="133" />
-      <File FileName="Assets\Scripts\Models\Cells\Cell.cs" Line="17" Column="23" />
-      <File FileName="Assets\Scripts\Models\Cells\GreenCell.cs" Line="17" Column="1" />
-      <File FileName="Assets\Scripts\Models\Cells\RedCell.cs" Line="17" Column="1" />
-      <File FileName="Assets\Scripts\Models\Cells\BlueCell.cs" Line="14" Column="1" />
+      <File FileName="Assets\Scripts\Managers\MapManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\EditorDebug.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Managers\ControlsManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Antibodies\NormalAntibody.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Cells\Cell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Cells\GreenCell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Cells\RedCell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Cells\BlueCell.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Models\Antibodies\Antibody.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Managers\AntibodiesManager.cs" Line="15" Column="16" />
+      <File FileName="Assets\Scripts\Managers\AntibodiesManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\Entity.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

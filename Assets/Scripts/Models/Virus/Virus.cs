@@ -26,6 +26,7 @@ namespace AssemblyCSharp
 		public event VirusReleaseHandler OnRelease;
 
 		private Virus nearestVirus;
+		private Cell nearestCell;
 
 		public Virus()
 		{
@@ -125,12 +126,44 @@ namespace AssemblyCSharp
 		private void Released()
 		{
 			m_eVirusState = VirusState.Idle;
-			if(nearestVirus != null && _fusionManager.InfoTypeFusion(this,nearestVirus)!= VirusType.None && _fusionManager.InfoRankFusion(this,nearestVirus)!= VirusRank.None)
+			if(nearestCell != null && nearestVirus !=null)
 			{
-				//fusion
-				_fusionManager.Fusion(this,nearestVirus);
-			}
+				float distCell = Vector3.Distance(this.transform.position,nearestCell.transform.position);
+				float distVirus = Vector3.Distance(this.transform.position,nearestVirus.transform.position);
 
+				if(distCell>distVirus)
+				{
+					if(InRangeForAction(nearestVirus.gameObject) &&
+					   nearestVirus != null &&
+					   _fusionManager.InfoTypeFusion(this,nearestVirus)!= VirusType.None &&
+					   _fusionManager.InfoRankFusion(this,nearestVirus)!= VirusRank.None)
+					{
+						//fusion
+						_fusionManager.Fusion(this,nearestVirus);
+					}
+				}
+				else
+				{
+					if(InRangeForAction(nearestCell.gameObject))
+						_duplicateManager.Duplicate(this,nearestCell);
+				}
+			}
+			else if(nearestCell != null)
+			{
+				if(InRangeForAction(nearestCell.gameObject))
+					_duplicateManager.Duplicate(this,nearestCell);
+			}
+			else
+			{
+				if(InRangeForAction(nearestVirus.gameObject) &&
+				   nearestVirus != null &&
+				   _fusionManager.InfoTypeFusion(this,nearestVirus)!= VirusType.None &&
+				   _fusionManager.InfoRankFusion(this,nearestVirus)!= VirusRank.None)
+				{
+					//fusion
+					_fusionManager.Fusion(this,nearestVirus);
+				}
+			}
 		}
 
 		private void Selected()
@@ -188,6 +221,33 @@ namespace AssemblyCSharp
 			transform.position = pos;
 			#endif
 
+			//check for performing a fusion
+			SeekForFusion();
+
+			if(nearestVirus != null)
+				Debug.Log(nearestVirus.m_sName + " is the nearest virus");
+
+			//if it's a basic virus then we can check for performing a duplicate
+			SeekForDuplicate();
+
+			if(nearestCell != null)
+				Debug.Log(nearestCell.m_sName + " is the nearest cell");
+		}
+
+		public void MoveBehaviour()
+		{
+			if(m_eVirusState == VirusState.Selected || m_eVirusState == VirusState.Idle)
+			{
+				Steer ();
+				if(transform.position != m_v3TargetPoint)
+				{
+					Move();
+				}
+			}
+		}
+
+		void SeekForFusion()
+		{
 			for(int i =0;i<VirusesManager.s_LstViruses.Count;i++)
 			{
 				Virus v = (Virus)VirusesManager.s_LstViruses[i];
@@ -195,10 +255,10 @@ namespace AssemblyCSharp
 				{
 					CircleCollider2D collider2D= v.gameObject.GetComponent<CircleCollider2D>();
 					float width = collider2D.radius;
-
+					
 					CircleCollider2D thisCollider2D= gameObject.GetComponent<CircleCollider2D>();
 					float thisWidth = thisCollider2D.radius;
-
+					
 					if(Vector3.Distance(v.transform.position,transform.position) < (width + thisWidth)/2)
 					{
 						if(nearestVirus != null)
@@ -218,27 +278,9 @@ namespace AssemblyCSharp
 					}
 				}
 			}
-
-			//Debug.Log(m_lstCollidingVirus.Count + " touched virus");
-			if(nearestVirus != null)
-				Debug.Log(nearestVirus.m_sName + " nearest virus");
 		}
 
-		public void MoveBehaviour()
-		{
-			if(m_eVirusState == VirusState.Selected || m_eVirusState == VirusState.Idle)
-			{
-				Steer ();
-				if(transform.position != m_v3TargetPoint)
-				{
-					Move();
-				}
-			}
-			if(m_eVirusState == VirusState.Selected)
-				Seek();
-		}
-
-		void Seek()
+		void SeekForDuplicate()
 		{
 			if(m_eVirusRank == VirusRank.D)
 			{
@@ -247,24 +289,26 @@ namespace AssemblyCSharp
 					Cell c = (Cell)CellsManager.s_LstCells[i];
 					if(c.m_eCellType.ToString() == m_eVirusType.ToString())
 					{
-						CircleCollider2D collider2D= c.gameObject.GetComponent<CircleCollider2D>();
-						float width = collider2D.radius;
-						
-						CircleCollider2D thisCollider2D= gameObject.GetComponent<CircleCollider2D>();
-						float thisWidth = thisCollider2D.radius;
-						
-						if(Vector3.Distance(c.transform.position,transform.position) < (width + thisWidth)/2)
+						if(InRangeForAction(c.gameObject))
 						{
-							if(c!= null)
-							{
-
-								_duplicateManager.Duplicate(this,c);
-
-							}
+								nearestCell = c;
 						}
 					}
 				}
 			}
+		}
+
+		bool InRangeForAction(GameObject _g)
+		{
+			CircleCollider2D collider2D= _g.GetComponent<CircleCollider2D>();
+			float width = collider2D.radius;
+			
+			CircleCollider2D thisCollider2D= gameObject.GetComponent<CircleCollider2D>();
+			float thisWidth = thisCollider2D.radius;
+			
+			if(Vector3.Distance(_g.transform.position,transform.position) < (width + thisWidth)/2)
+				return true;
+			else return false;
 		}
 
 		public override void OnDrawGizmos()
