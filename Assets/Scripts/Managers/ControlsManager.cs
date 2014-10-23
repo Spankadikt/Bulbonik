@@ -16,7 +16,7 @@ public class ControlsManager : MonoBehaviour
 	public delegate void PressHandler(Vector3 point,float duration);
 	public static event PressHandler OnPress;
 
-	public delegate void ReleaseHandler();
+	public delegate void ReleaseHandler(Vector3 point);
 	public static event ReleaseHandler OnRelease;
 	
 	Vector2 m_v2FirstPressPos;
@@ -26,7 +26,7 @@ public class ControlsManager : MonoBehaviour
 	private float m_fTouchTimer = 0f;
 	private float m_fSwipeTimer = 0f;
 	private float m_fPressTimer = 0f;
-	private float m_fTimeToTouch = 0.20f;
+	private float m_fTimeToTouch = 0.15f;
 	// Use this for initialization
 	void Start ()
 	{
@@ -106,7 +106,7 @@ public class ControlsManager : MonoBehaviour
 			if(m_fPressTimer > m_fTimeToTouch)
 			{
 				//get touch position on screen
-				OnRelease();
+				OnRelease(new Vector3(Input.GetTouch(0).position.x,Input.GetTouch(0).position.y,0));
 			}
 			m_fPressTimer = 0;
 		}
@@ -128,8 +128,7 @@ public class ControlsManager : MonoBehaviour
 			pressed = false;
 			if(m_fPressTimer > m_fTimeToTouch)
 			{
-				//get touch position on screen
-				OnRelease();
+				OnRelease(Input.mousePosition);
 			}
 			m_fPressTimer = 0;
 		}

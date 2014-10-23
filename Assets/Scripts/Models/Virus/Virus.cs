@@ -28,6 +28,8 @@ namespace AssemblyCSharp
 		private Virus nearestVirus;
 		private Cell nearestCell;
 
+		private List<Vector3> tabLastPos = new List<Vector3>();
+
 		public Virus()
 		{
 			base.m_fSpeed = 5f;
@@ -78,7 +80,12 @@ namespace AssemblyCSharp
 			   result.x < MapManager.s_v3PickMapCornerTopRight.x &&
 			   result.y > MapManager.s_v3PickMapCornerBotLeft.y &&
 			   result.y < MapManager.s_v3PickMapCornerTopLeft.y)
+			{
 				transform.position = result;
+				if(tabLastPos.Count>=10)
+					tabLastPos.RemoveAt(0);
+				tabLastPos.Add(result);
+			}
 		}
 
 		public void Steer()
@@ -88,7 +95,12 @@ namespace AssemblyCSharp
 			for(int i =0;i<VirusesManager.s_LstViruses.Count;i++)
 			{
 				Virus v = (Virus)VirusesManager.s_LstViruses[i];
-				if(v != this && v.m_eVirusState != VirusState.Grabbed)
+				CircleCollider2D collider2D= v.gameObject.GetComponent<CircleCollider2D>();
+				float width = collider2D.radius;
+
+				if(v != this &&
+				   v.m_eVirusState == m_eVirusState&&
+				   Vector3.Distance(v.transform.position,transform.position)<VirusesManager.m_fDynamicAvoidance+width)
 				{
 					Vector3 relativePos = transform.position - v.transform.position;
 					separation += relativePos/(relativePos.sqrMagnitude);
@@ -97,11 +109,7 @@ namespace AssemblyCSharp
 
 			Vector3 result = Vector3.zero;
 
-
-			if(Vector3.Distance(transform.position,m_v3TargetPoint) > VirusesManager.m_fDynamicAvoidance)
-				result = s_v3PointToFollow;
-			else
-				result = separation * VirusesManager.m_fAvoidance + s_v3PointToFollow;
+			result = separation * VirusesManager.m_fAvoidance + s_v3PointToFollow;
 
 			result.z = 0;
 			base.m_v3NewTargetPoint = result ;
@@ -126,6 +134,12 @@ namespace AssemblyCSharp
 		private void Released()
 		{
 			m_eVirusState = VirusState.Idle;
+
+			s_v3PointToFollow = transform.position;
+			m_v3TargetPoint = transform.position;
+			base.m_v3NewTargetPoint = transform.position;
+
+
 			if(nearestCell != null && nearestVirus !=null)
 			{
 				float distCell = Vector3.Distance(this.transform.position,nearestCell.transform.position);
@@ -352,6 +366,7 @@ namespace AssemblyCSharp
 				default:break;
 				}
 				Gizmos.DrawWireSphere(this.transform.position,size);
+				Gizmos.DrawLine(transform.position,m_v3NewTargetPoint);
 			}
 		}
 

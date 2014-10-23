@@ -33,7 +33,7 @@ public class VirusesManager : MonoBehaviour
 		Debug.Log(s_LstViruses.Count + " viruses, avoidance : " + m_fDynamicAvoidance);
 	}
 
-	public static void Release()
+	public static void Release(Vector3 _releasePoint)
 	{
 		for(int i=0;i<s_LstViruses.Count;i++)
 		{
@@ -44,6 +44,7 @@ public class VirusesManager : MonoBehaviour
 				ReleaseVirus(v);
 			}
 		}
+		SetPointToFollow(_releasePoint);
 	}
 
 	public static void CheckTouch(Vector3 _touchPoint)
